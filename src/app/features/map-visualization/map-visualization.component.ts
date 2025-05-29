@@ -25,6 +25,8 @@ export class MapVisualizationComponent implements AfterViewInit {
   loading = true;
   error = '';
   map: any;
+  public isBrowser = isPlatformBrowser(this.platformId);
+
 
   private mapInitialized = false;
   private leaflet: any;
