@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, ViewChild, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
@@ -24,13 +24,18 @@ export class MapVisualizationComponent implements AfterViewInit {
   searchTerm = '';
   loading = true;
   error = '';
-  mapInitialized = false;
   map: any;
 
-  constructor(private http: HttpClient) {}
+  private mapInitialized = false;
+  private leaflet: any;
+
+  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngAfterViewInit() {
-    this.loadCountries();
+    // Only load if in browser (for SSR safety)
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadCountries();
+    }
   }
 
   loadCountries() {
@@ -38,7 +43,7 @@ export class MapVisualizationComponent implements AfterViewInit {
       next: (data) => {
         this.countries = data;
         this.filteredCountries = data
-          .filter((c) => c.latlng && c.latlng.length === 2) // only countries with latlng
+          .filter((c) => c.latlng && c.latlng.length === 2)
           .sort((a, b) => a.name.common.localeCompare(b.name.common));
 
         if (this.filteredCountries.length > 0) {
@@ -57,10 +62,7 @@ export class MapVisualizationComponent implements AfterViewInit {
   filterCountries() {
     const term = this.searchTerm.toLowerCase();
     this.filteredCountries = this.countries.filter(
-      (c) =>
-        c.name.common.toLowerCase().includes(term) &&
-        c.latlng &&
-        c.latlng.length === 2
+      (c) => c.name.common.toLowerCase().includes(term) && c.latlng && c.latlng.length === 2
     );
     if (this.filteredCountries.length > 0) {
       this.selectedCountryName = this.filteredCountries[0].name.common;
@@ -69,23 +71,29 @@ export class MapVisualizationComponent implements AfterViewInit {
   }
 
   async onCountryChange() {
-    this.mapInitialized = false;
     await this.createMap();
   }
 
   async createMap() {
-    if (!this.selectedCountryName || !this.mapContainer) return;
+    if (
+      !this.selectedCountryName ||
+      !this.mapContainer ||
+      !this.mapContainer.nativeElement ||
+      !isPlatformBrowser(this.platformId)
+    )
+      return;
 
-    const country = this.countries.find(
-      (c) => c.name.common === this.selectedCountryName
-    );
+    const country = this.countries.find((c) => c.name.common === this.selectedCountryName);
     if (!country || !country.latlng || country.latlng.length !== 2) return;
 
-    const L = await import('leaflet');
+    if (!this.leaflet) {
+      this.leaflet = await import('leaflet');
+    }
+    const L = this.leaflet;
+
+    const [lat, lng] = country.latlng;
 
     if (!this.map) {
-      // Create map only once
-      const [lat, lng] = country.latlng;
       this.map = L.map(this.mapContainer.nativeElement).setView([lat, lng], 5);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -94,8 +102,8 @@ export class MapVisualizationComponent implements AfterViewInit {
       }).addTo(this.map);
 
       this.marker = L.marker([lat, lng]).addTo(this.map);
+      this.mapInitialized = true;
     } else {
-      // Move map smoothly to new location
       this.moveMapToCountry(country.latlng);
     }
   }
@@ -103,26 +111,19 @@ export class MapVisualizationComponent implements AfterViewInit {
   moveMapToCountry(latlng: [number, number]) {
     if (!this.map || !this.marker) return;
 
-    // Animate the map view to new location (duration in seconds)
     this.map.flyTo(latlng, 5, {
-      duration: 1.5, // seconds
+      duration: 1.5,
       easeLinearity: 0.25,
     });
 
-    // Move the marker smoothly as well
     this.marker.setLatLng(latlng);
   }
 
-  // Helper to call createMap only if mapContainer and countries are ready
   tryCreateMap() {
-    if (
-      this.mapContainer &&
-      this.mapContainer.nativeElement &&
-      this.selectedCountryName
-    ) {
+    if (this.mapContainer && this.mapContainer.nativeElement && this.selectedCountryName) {
       this.createMap();
-    } else {
-      // If mapContainer not ready yet, wait a bit and retry (e.g. 100ms)
+    } else if (isPlatformBrowser(this.platformId)) {
+      // Retry after short delay only if in browser
       setTimeout(() => this.tryCreateMap(), 100);
     }
   }

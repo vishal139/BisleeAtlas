@@ -1,14 +1,15 @@
 import {
   Component,
   OnInit,
-  AfterViewInit,
+  AfterViewChecked,
   ViewChild,
   ElementRef,
-  AfterViewChecked,
+  Inject,
+  PLATFORM_ID,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-country-details',
@@ -26,7 +27,11 @@ export class CountryDetailsComponent implements OnInit, AfterViewChecked {
 
   private mapInitialized = false;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngOnInit(): void {
     const code = this.route.snapshot.paramMap.get('code');
@@ -36,26 +41,31 @@ export class CountryDetailsComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    if (this.country && !this.mapInitialized && this.mapContainer?.nativeElement) {
+    if (
+      this.country &&
+      !this.mapInitialized &&
+      this.mapContainer?.nativeElement &&
+      isPlatformBrowser(this.platformId) // Only run in browser
+    ) {
       setTimeout(() => this.createMap(), 0);
     }
   }
 
   fetchCountry(code: string) {
     this.loading = true;
-    this.http
-      .get<any[]>(`https://restcountries.com/v3.1/alpha/${code}`)
-      .subscribe({
-        next: (data) => {
-          this.country = data[0];
-          this.loading = false;
-          this.createMap(); // Try creating map after fetch
-        },
-        error: () => {
-          this.error = 'Failed to load country data.';
-          this.loading = false;
-        },
-      });
+    this.http.get<any[]>(`https://restcountries.com/v3.1/alpha/${code}`).subscribe({
+      next: (data) => {
+        this.country = data[0];
+        this.loading = false;
+        if (isPlatformBrowser(this.platformId)) {
+          this.createMap(); // Create map only in browser
+        }
+      },
+      error: () => {
+        this.error = 'Failed to load country data.';
+        this.loading = false;
+      },
+    });
   }
 
   getLanguagesString(languages?: Record<string, string>): string {
@@ -73,7 +83,6 @@ export class CountryDetailsComponent implements OnInit, AfterViewChecked {
   }
 
   async createMap() {
-  
     if (
       this.mapInitialized ||
       !this.mapContainer ||
@@ -82,21 +91,24 @@ export class CountryDetailsComponent implements OnInit, AfterViewChecked {
     ) {
       return;
     }
-  
+
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     this.mapInitialized = true;
-  
+
     const L = await import('leaflet');
-  
+
     const [lat, lng] = this.country.latlng;
-  
+
     const map = L.map(this.mapContainer.nativeElement).setView([lat, lng], 5);
-  
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
         '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
-  
+
     L.marker([lat, lng]).addTo(map);
   }
-  
 }
