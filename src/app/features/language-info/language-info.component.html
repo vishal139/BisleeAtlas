@@ -1,0 +1,38 @@
+<div class="language-info-container">
+    <h1>Language Info</h1>
+  
+    <input
+      type="text"
+      placeholder="Search languages..."
+      [(ngModel)]="searchTerm"
+      (input)="filterLanguages()"
+    />
+  
+    <div class="languages-list">
+      <button
+        *ngFor="let lang of filteredLanguages"
+        (click)="selectLanguage(lang)"
+        [class.selected]="lang === selectedLanguage"
+      >
+        {{ lang }}
+      </button>
+    </div>
+  
+    <div *ngIf="loading" class="loading">Loading countries...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+  
+    <div *ngIf="selectedLanguage && !loading && countries.length > 0" class="country-list">
+      <h2>Countries speaking {{ selectedLanguage }} ({{ countries.length }})</h2>
+      <ul>
+        <li *ngFor="let country of countries">
+          <img [src]="country.flags?.png" alt="{{ country.name.common }} flag" width="24" height="16" />
+          {{ country.name.common }} ({{ country.region }})
+        </li>
+      </ul>
+    </div>
+  
+    <div *ngIf="selectedLanguage && !loading && countries.length === 0">
+      No countries found for this language.
+    </div>
+  </div>
+  

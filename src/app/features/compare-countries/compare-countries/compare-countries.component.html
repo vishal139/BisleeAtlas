@@ -1,0 +1,50 @@
+<section class="compare-container">
+    <h2>Compare Countries</h2>
+  
+    <div class="select-wrapper">
+      <input
+        type="text"
+        placeholder="Search for countries..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange()"
+      />
+  
+      <div class="search-results" *ngIf="filteredCountries.length > 0">
+        <div
+          class="country-option"
+          *ngFor="let country of filteredCountries"
+          (click)="addToCompare(country)"
+        >
+          {{ country.name.common }}
+        </div>
+      </div>
+    </div>
+  
+    <div class="comparison-table" *ngIf="compareList.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Flag</th>
+            <th>Name</th>
+            <th>Capital</th>
+            <th>Region</th>
+            <th>Population</th>
+            <th>Languages</th>
+            <th>Currencies</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let country of compareList">
+            <td><img [src]="country.flags.png" [alt]="country.name.common" /></td>
+            <td>{{ country.name.common }}</td>
+            <td>{{ country.capital?.join(', ') || 'N/A' }}</td>
+            <td>{{ country.region }}</td>
+            <td>{{ country.population | number }}</td>
+            <td>{{ getLanguagesString(country.languages) }}</td>
+            <td>{{ getCurrenciesString(country.currencies) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  

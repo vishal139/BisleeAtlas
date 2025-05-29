@@ -1,0 +1,30 @@
+<div class="game-container">
+    <h2>Flag Memory Game</h2>
+  
+    <label for="pairCount">Select Number of Pairs:</label>
+    <select id="pairCount" [(ngModel)]="pairCount">
+      <option *ngFor="let n of pairOptions" [value]="n">{{ n }}</option>
+    </select>
+  
+    <button class="reset-btn" (click)="resetGame()">Start / Reset</button>
+  
+    <p>Moves: {{ moves }}</p>
+  
+    <div class="grid">
+      <div
+        class="card"
+        *ngFor="let card of cards"
+        [class.flipped]="card.flipped || card.matched"
+        (click)="flipCard(card)"
+      >
+        <div class="card-inner">
+          <div class="card-front"></div>
+          <div class="card-back">
+            <img [src]="card.flag" [alt]="card.country + ' flag'" />
+            <div class="country-name">{{ card.country }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

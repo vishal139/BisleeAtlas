@@ -1,0 +1,144 @@
+.quiz-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 1.5rem;
+    background: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: #2c3e50;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .flag-image {
+    text-align: center;
+    margin: 1rem 0;
+  }
+  
+  .flag-image img {
+    width: 160px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.15);
+  }
+  
+  .options-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .options-list li {
+    background: #fff;
+    padding: 12px 18px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgb(0 0 0 / 0.05);
+    user-select: none;
+  }
+  
+  .options-list li:hover:not(.selected):not(.correct):not(.incorrect) {
+    background-color: #e6f0ff;
+    border-color: #357edd;
+  }
+  
+  .options-list li.selected {
+    font-weight: 600;
+    border-color: #357edd;
+    background-color: #dbe9ff;
+  }
+  
+  .options-list li.correct {
+    background-color: #c8f7c5;
+    border-color: #4caf50;
+    color: #2e7d32;
+    font-weight: 700;
+  }
+  
+  .options-list li.incorrect {
+    background-color: #f8d7da;
+    border-color: #e53935;
+    color: #b71c1c;
+    font-weight: 700;
+  }
+  
+  button {
+    margin-top: 1rem;
+    background-color: #357edd;
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  button:hover {
+    background-color: #285bb5;
+  }
+  
+  .error {
+    color: #e53935;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    .quiz-container {
+      margin: 10px;
+      padding: 1rem;
+    }
+  
+    .flag-image img {
+      width: 120px;
+    }
+  
+    button {
+      max-width: 100%;
+      padding: 12px 0;
+    }
+  }
+  
+
+  .restart-button {
+    background-color: #e67e22;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    transition: background-color 0.3s ease;
+    display: block;
+    max-width: 200px;
+  }
+  
+  .restart-button:hover {
+    background-color: #cf711c;
+  }
+  

@@ -1,0 +1,20 @@
+<div class="wishlist-container">
+    <h2>Travel Wishlist</h2>
+  
+    <input
+      type="text"
+      placeholder="Add a country..."
+      [(ngModel)]="newCountry"
+      (keyup.enter)="addCountry()"
+      class="country-input"
+    />
+    <button (click)="addCountry()" class="add-button">Add</button>
+  
+    <ul class="wishlist">
+      <li *ngFor="let country of wishlist; let i = index">
+        {{ country }}
+        <button (click)="removeCountry(i)" class="remove-button">Remove</button>
+      </li>
+    </ul>
+  </div>
+  

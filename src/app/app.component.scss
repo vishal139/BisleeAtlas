@@ -1,0 +1,112 @@
+/* Reset default link style */
+a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .navbar {
+    background-color: #44bd32; /* green as primary bg */
+    color: white;
+    padding: 0.5rem 1rem;
+  
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  
+    .brand h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+  
+    /* Hamburger menu button */
+    .menu-toggle {
+      background: none;
+      border: none;
+      display: none; /* hidden on desktop */
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 0;
+      span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: white;
+        border-radius: 2px;
+        transition: 0.3s ease;
+        &.open:nth-child(1) {
+          transform: rotate(45deg) translate(5px, 5px);
+        }
+        &.open:nth-child(2) {
+          opacity: 0;
+        }
+        &.open:nth-child(3) {
+          transform: rotate(-45deg) translate(5px, -5px);
+        }
+      }
+    }
+  
+    nav.nav-links {
+      display: flex;
+      gap: 1rem;
+  
+      a {
+        padding: 0.5rem 0.75rem;
+        font-weight: 600;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+        color: white;
+        cursor: pointer;
+  
+        &:hover {
+          background-color: #4cd137; /* blue hover */
+        }
+      }
+    }
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .navbar {
+      .menu-toggle {
+        display: flex;
+      }
+  
+      nav.nav-links {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background-color: #44bd32;
+        flex-direction: column;
+        gap: 0;
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.3s ease;
+        a {
+          padding: 1rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        &.open {
+          max-height: 500px; /* enough to show all links */
+        }
+      }
+    }
+  }
+  
+  main {
+    padding: 2rem;
+    min-height: 80vh;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #00a8ff;
+    color: white;
+  }
+  

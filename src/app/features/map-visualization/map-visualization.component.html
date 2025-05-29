@@ -1,0 +1,24 @@
+<div class="map-wrapper">
+    <div class="controls">
+      <input
+        type="text"
+        placeholder="Search country..."
+        [(ngModel)]="searchTerm"
+        (input)="filterCountries()"
+        [disabled]="loading"
+      />
+  
+      <select [(ngModel)]="selectedCountryName" (change)="onCountryChange()" [disabled]="loading || filteredCountries.length === 0">
+        <option *ngFor="let country of filteredCountries" [value]="country.name.common">
+          {{ country.name.common }}
+        </option>
+      </select>
+    </div>
+  
+    <div *ngIf="error" class="error">{{ error }}</div>
+  
+    <div #mapContainer class="map-container" *ngIf="!loading && !error"></div>
+  
+    <div *ngIf="loading" class="loading">Loading countries...</div>
+  </div>
+  

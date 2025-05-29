@@ -1,0 +1,41 @@
+<div class="quiz-container" *ngIf="!loading && !error">
+    <h2>Country Quiz</h2>
+  
+    <p><strong>Score: {{ score }} / {{ totalQuestions }}</strong></p>
+  
+    <button class="restart-button" (click)="restartQuiz()">Restart Quiz</button>
+  
+    <div *ngIf="question; else finishedTemplate">
+      <p><strong>Question {{ questionNumber }} of {{ totalQuestions }}</strong></p>
+      <p>{{ question.questionText }}</p>
+  
+      <div *ngIf="question.imageUrl" class="flag-image">
+        <img [src]="question.imageUrl" alt="Flag" />
+      </div>
+  
+      <ul class="options-list">
+        <li
+          *ngFor="let option of question.options"
+          (click)="selectOption(option)"
+          [class.selected]="selectedOption === option"
+          [class.correct]="answered && option === question.correctAnswer"
+          [class.incorrect]="answered && selectedOption === option && option !== question.correctAnswer"
+        >
+          {{ option }}
+        </li>
+      </ul>
+  
+      <button *ngIf="answered && questionNumber < totalQuestions" (click)="nextQuestion()">
+        Next Question
+      </button>
+    </div>
+  
+    <ng-template #finishedTemplate>
+      <h3>Quiz Completed!</h3>
+      <p>Your final score: {{ score }} / {{ totalQuestions }}</p>
+    </ng-template>
+  </div>
+  
+  <div *ngIf="loading">Loading quiz...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  

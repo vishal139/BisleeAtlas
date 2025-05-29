@@ -1,0 +1,46 @@
+<section class="explorer-container">
+    <h2>Country Explorer</h2>
+  
+    <input
+      type="text"
+      placeholder="Search countries by name..."
+      [(ngModel)]="searchTerm"
+      (input)="onSearchChange()"
+    />
+  
+    <div *ngIf="loading" class="loading">Loading countries...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+  
+    <div class="countries-list">
+      <div
+        class="country-card"
+        *ngFor="let country of filteredCountries"
+        (click)="selectCountry(country)"
+        [class.selected]="country === selectedCountry"
+      >
+        <img [src]="country.flags.png" [alt]="country.name.common + ' flag'" />
+        <h3>{{ country.name.common }}</h3>
+        <p><strong>Region:</strong> {{ country.region }}</p>
+        <p><strong>Population:</strong> {{ country.population | number }}</p>
+      </div>
+    </div>
+  
+    <div *ngIf="selectedCountry" class="country-details">
+      <h3>{{ selectedCountry.name.common }} Details</h3>
+      <img
+        [src]="selectedCountry.flags.png"
+        [alt]="selectedCountry.name.common + ' flag'"
+        class="detail-flag"
+      />
+      <p><strong>Capital:</strong> {{ selectedCountry.capital?.join(', ') || 'N/A' }}</p>
+      <p>
+        <strong>Languages:</strong> {{ getLanguagesString(selectedCountry.languages) }}
+      </p>
+      
+      <p>
+        <strong>Currencies:</strong> {{ getCurrenciesString(selectedCountry.currencies) }}
+      </p>
+      
+    </div>
+  </section>
+  

@@ -1,0 +1,65 @@
+.controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  
+    input,
+    select {
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1.8px solid #ccc;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      outline: none;
+      flex-grow: 1;
+      max-width: 300px;
+      background-color: #fff;
+      appearance: none;
+    }
+  
+    input::placeholder {
+      color: #aaa;
+      font-style: italic;
+    }
+  
+    input:focus,
+    select:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+    }
+  
+    select {
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3csvg%20fill='gray'%20height='12'%20viewBox='0%200%204%205'%20width='12'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M2%200L0%202h4L2%200zM0%203l2%202%202-2H0z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 12px 12px;
+    }
+  
+    input:hover,
+    select:hover {
+      border-color: #0056b3;
+      box-shadow: 0 0 6px rgba(0, 86, 179, 0.3);
+      cursor: pointer;
+    }
+  
+    /* Responsive Styles */
+    @media (max-width: 600px) {
+      flex-direction: column;
+      gap: 0.75rem;
+  
+      input,
+      select {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+  }
+  
+  .map-container {
+    height: 90vh;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  

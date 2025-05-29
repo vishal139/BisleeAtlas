@@ -1,0 +1,35 @@
+<div class="country-details-page">
+    <!-- <h2>Country Details</h2> -->
+  
+    <div *ngIf="loading" class="loading">
+      Loading country data...
+    </div>
+  
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+  
+    <div *ngIf="country && !loading && !error" class="country-details">
+      <h3>{{ country.name.common }}</h3>
+      <img
+        [src]="country.flags.png"
+        [alt]="country.name.common + ' flag'"
+        class="detail-flag"
+      />
+  
+      <p><strong>Capital:</strong> {{ country.capital?.join(', ') || 'N/A' }}</p>
+      <p><strong>Region:</strong> {{ country.region }}</p>
+      <p><strong>Subregion:</strong> {{ country.subregion || 'N/A' }}</p>
+      <p><strong>Population:</strong> {{ country.population | number }}</p>
+  
+      <p><strong>Languages:</strong> {{ getLanguagesString(country.languages) }}</p>
+      <p><strong>Currencies:</strong> {{ getCurrenciesString(country.currencies) }}</p>
+  
+      <div
+      #mapContainer
+      class="map-container"
+      style="width: 100%; height: 400px; border-radius: 12px; margin-top: 16px;"
+    ></div>
+    </div>
+  </div>
+  
