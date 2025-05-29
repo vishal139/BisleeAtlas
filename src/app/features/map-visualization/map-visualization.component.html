@@ -1,18 +1,10 @@
 <div class="map-wrapper">
   <div class="controls">
-    <input
-      type="text"
-      placeholder="Search country..."
-      [(ngModel)]="searchTerm"
-      (input)="filterCountries()"
-      [disabled]="loading"
-    />
+    <input type="text" placeholder="Search country..." [(ngModel)]="searchTerm" (input)="filterCountries()"
+      [disabled]="loading" />
 
-    <select
-      [(ngModel)]="selectedCountryName"
-      (change)="onCountryChange()"
-      [disabled]="loading || filteredCountries.length === 0"
-    >
+    <select [(ngModel)]="selectedCountryName" (change)="onCountryChange()"
+      [disabled]="loading || filteredCountries.length === 0">
       <option *ngFor="let country of filteredCountries" [value]="country.name.common">
         {{ country.name.common }}
       </option>
@@ -22,12 +14,9 @@
   <div *ngIf="error" class="error">{{ error }}</div>
 
   <!-- Add isBrowser check here -->
-  <div
-    #mapContainer
-    class="map-container"
-    *ngIf="!loading && !error && isBrowser"
-    style="height: 400px; width: 100%;"
-  ></div>
+  <div #mapContainer class="map-container" style="height: 800px; width: 100%; border-radius: 12px; margin-top: 16px;">
+  </div>
+
 
   <div *ngIf="loading" class="loading">Loading countries...</div>
 </div>
