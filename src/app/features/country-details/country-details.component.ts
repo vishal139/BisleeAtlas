@@ -51,14 +51,16 @@ export class CountryDetailsComponent implements OnInit, AfterViewChecked {
     }
   }
 
+
   fetchCountry(code: string) {
     this.loading = true;
     this.http.get<any[]>(`https://restcountries.com/v3.1/alpha/${code}`).subscribe({
-      next: (data) => {
+      next: async (data) => {
         this.country = data[0];
         this.loading = false;
+  
         if (isPlatformBrowser(this.platformId)) {
-          this.createMap(); // Create map only in browser
+          setTimeout(() => this.createMap(), 0);
         }
       },
       error: () => {
@@ -85,30 +87,22 @@ export class CountryDetailsComponent implements OnInit, AfterViewChecked {
   async createMap() {
     if (
       this.mapInitialized ||
-      !this.mapContainer ||
-      !this.mapContainer.nativeElement ||
-      !this.country?.latlng
-    ) {
-      return;
-    }
-
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-
+      !this.mapContainer?.nativeElement ||
+      !this.country?.latlng ||
+      !isPlatformBrowser(this.platformId)
+    ) return;
+  
     this.mapInitialized = true;
-
+  
     const L = await import('leaflet');
-
     const [lat, lng] = this.country.latlng;
-
+  
     const map = L.map(this.mapContainer.nativeElement).setView([lat, lng], 5);
-
+  
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution:
-        '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map);
-
+  
     L.marker([lat, lng]).addTo(map);
   }
 }
