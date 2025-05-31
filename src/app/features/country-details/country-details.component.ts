@@ -6,6 +6,7 @@ import {
   ElementRef,
   Inject,
   PLATFORM_ID,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -18,7 +19,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
   templateUrl: './country-details.component.html',
   styleUrls: ['./country-details.component.scss'],
 })
-export class CountryDetailsComponent implements OnInit, AfterViewChecked {
+export class CountryDetailsComponent implements OnInit, AfterViewInit {
   country: any = null;
   loading = false;
   error = '';
@@ -40,16 +41,12 @@ export class CountryDetailsComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  ngAfterViewChecked(): void {
-    if (
-      this.country &&
-      !this.mapInitialized &&
-      this.mapContainer?.nativeElement &&
-      isPlatformBrowser(this.platformId) // Only run in browser
-    ) {
+  ngAfterViewInit(): void {
+    if (this.country && isPlatformBrowser(this.platformId)) {
       setTimeout(() => this.createMap(), 0);
     }
   }
+  
 
 
   fetchCountry(code: string) {
